@@ -159,6 +159,30 @@ Track safely:
 
 Avoid storing raw sensitive prompts indefinitely by default.
 
+## 10A. Knowledge/retrieval observability
+
+Track:
+
+- ingestion jobs and backlog;
+- parser/chunker version;
+- parse failures;
+- source-to-chunk count;
+- embedding profile/model;
+- embedding latency/cost/failures;
+- stale chunks;
+- reindex queue age;
+- retrieval latency;
+- lexical/vector candidate counts;
+- post-permission filtered counts;
+- rerank latency;
+- returned evidence source IDs;
+- retrieval policy/version;
+- recall/quality evaluation on curated fixtures.
+
+Do not log full sensitive chunk text by default.
+
+Monitor approximate-search quality against deterministic evaluation fixtures before changing vector index parameters.
+
 ## 11. Alerts
 
 Alerts should be actionable.
