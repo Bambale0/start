@@ -221,7 +221,7 @@ The first vertical validates:
 - notifications;
 - manager analytics.
 
-See `docs/specs/CONTINENT_PROPERTY_MANAGEMENT.md`.
+See `docs/specs/PROPERTY_MANAGEMENT.md`.
 
 ## 8. Later verticals
 
@@ -283,7 +283,7 @@ Secondary:
 
 ## 11. Commercial validation path
 
-1. solve a real operational pain in Континент;
+1. solve a real operational pain in the first Property Management pilot;
 2. measure baseline before automation;
 3. measure impact after automation;
 4. expose manager-level analytics;
