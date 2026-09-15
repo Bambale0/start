@@ -73,7 +73,7 @@
 ~~~text
 МОЯ ГРУППА
 
-Континент            94/100   🟢
+Управляющая компания 94/100   🟢
 Строительство        78/100   🟡
 Автопарк             86/100   🟢
 
@@ -164,7 +164,7 @@ Start не превращает все компании в один общий �
 ~~~text
 User
 │
-├── Континент       → OWNER
+├── УК / ЖСК          → OWNER
 ├── Строительство   → OWNER
 ├── Автопарк        → OWNER
 └── Компания N      → ANALYTICS / READ ONLY
@@ -403,7 +403,7 @@ Counterparty→ СТО / поставщик
 ~~~text
 Контрагент ООО X
 
-Континент          4.2 млн ₽
+УК / ЖСК           4.2 млн ₽
 Строительство     11.7 млн ₽
 Автопарк           2.9 млн ₽
 ────────────────────────────
@@ -651,7 +651,7 @@ Tenant leakage в целевой архитектуре считается **rel
 - Docker/PostgreSQL/Redis foundation;
 - CI и первые automated tests.
 
-Следующий большой этап — **Identity / Tenancy / Authorization foundation**, после чего начинается первый рабочий vertical slice для Континента.
+Следующий большой этап — **Identity / Tenancy / Authorization foundation**, после чего начинается первый рабочий vertical slice для Property Management Pack.
 
 > README описывает целевой продукт и архитектуру. Функции, отмеченные как planned/target, не выдаются за уже внедрённые в production.
 
@@ -666,7 +666,7 @@ Universal Operational Core
           ↓
 Workflow + SLA + Events
           ↓
-Континент / Property Management Pilot
+Property Management Pilot
           ↓
 AI Office Automation
           ↓
@@ -704,7 +704,7 @@ Standalone B2B Platform
 - [Observability](docs/architecture/OBSERVABILITY.md)
 
 ### Specifications
-- [Континент / Property Management](docs/specs/CONTINENT_PROPERTY_MANAGEMENT.md)
+- [Property Management Pack](docs/specs/PROPERTY_MANAGEMENT.md)
 - [Owner Control](docs/specs/OWNER_CONTROL.md)
 - [Admin Control Plane](docs/specs/ADMIN_CONTROL_PLANE.md)
 
