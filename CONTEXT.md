@@ -136,6 +136,12 @@ Workflow/event-invoked read-first agent with a bounded task envelope, structured
 ## Action Gateway
 Single controlled path for agent-initiated writes. It validates tenant scope, permission, business rules, idempotency and confirmation/approval policy before calling normal application services.
 
+## AttentionEvent
+A scoped signal that a business/integration event requires human awareness or acknowledgement. Delivery policy is configurable and may use realtime in-app, messenger, email, push or fallback/escalation channels.
+
+## NotificationPolicy
+Versioned tenant configuration defining severity, recipients, immediate/digest behavior, acknowledgement, escalation, fallback channels, quiet hours and grouping. No urgent timing/recipient/channel values are hardcoded.
+
 ## Owner Control
 High-level UX for founders/owners/group managers focused on money, risk, deviations, assets, projects, contractors and decisions.
 
@@ -394,6 +400,8 @@ A01 Shared Agent Runtime / Action Gateway
 A02 Interactive Employee Agent
 ↓
 A03 Routine Automation Agent
+↓
+C01 Realtime Attention / Notification Engine
 ↓
 Property Management vertical slices
 ↓
