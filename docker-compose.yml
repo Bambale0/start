@@ -1,0 +1,44 @@
+services:
+  api:
+    build: .
+    environment:
+      START_ENVIRONMENT: development
+      START_LOG_LEVEL: INFO
+      START_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-start}:${POSTGRES_PASSWORD:-start_dev_only}@postgres:5432/${POSTGRES_DB:-start}
+      START_REDIS_URL: redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-start}
+      POSTGRES_USER: ${POSTGRES_USER:-start}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-start_dev_only}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-start} -d ${POSTGRES_DB:-start}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - start_postgres:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  start_postgres:
