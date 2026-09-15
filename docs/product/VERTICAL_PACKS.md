@@ -60,6 +60,18 @@ WorkOrderType:
   Repair
   Inspection
   EmergencyResponse
+  PlannedMaintenance
+
+Capabilities:
+  ResidentPortal
+  HouseChatBot
+  Inventory
+  PlannedWorks
+  LegalWorkspace
+  CorrespondenceRegistry
+  Estimates
+  NotificationComposer
+  MonthlyReporting
 ```
 
 ## Construction pack
@@ -133,11 +145,19 @@ Examples:
 
 Property Management navigation may expose:
 
-- Requests;
-- Buildings;
+- Inbox / Requests;
+- Buildings / Building 360;
 - Residents;
 - Incidents;
-- Work Orders.
+- Work Orders;
+- Planned Works / PPR;
+- Inventory / Assets;
+- Legal Workspace;
+- Documents / Registry;
+- Estimates;
+- Notifications;
+- Tasks;
+- Analytics.
 
 Construction may expose:
 
