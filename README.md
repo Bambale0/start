@@ -206,6 +206,7 @@ Start проектируется для другого уровня:
 | **Финансы** | управленческие события, 1С, банки, план/факт |
 | **Коммуникации** | email, телефония, web, MAX, Telegram, VK |
 | **AI** | классификация, маршрутизация, анализ, аномалии |
+| **Knowledge / Retrieval** | гибридный поиск по документам и коммуникациям, evidence для AI |
 | **Owner Control** | вся группа компаний в одном окне |
 
 ---
@@ -577,7 +578,7 @@ AI может классифицировать и анализировать, н
 | Слой | Направление |
 |---|---|
 | Backend | Python 3.12+, FastAPI |
-| Data | PostgreSQL, SQLAlchemy 2.x, Alembic |
+| Data | PostgreSQL + pgvector, SQLAlchemy 2.x, Alembic |
 | Cache / coordination | Redis |
 | Async work | queue abstraction + workers |
 | Frontend | React / TypeScript planned |
@@ -685,7 +686,7 @@ Cross-company Intelligence
 Standalone B2B Platform
 ~~~
 
-Подробнее: [Implementation Plan](docs/roadmap/IMPLEMENTATION_PLAN.md)
+Подробнее: [Implementation Plan](docs/roadmap/IMPLEMENTATION_PLAN.md) · [Feature-by-Feature Implementation Plan](docs/roadmap/FEATURE_IMPLEMENTATION_PLAN.md)
 
 ---
 
