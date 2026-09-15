@@ -469,6 +469,58 @@ Configured workflow/event templates can use AI reasoning for repetitive interpre
 
 ---
 
+# COMMUNICATION / ATTENTION FOUNDATION
+
+## C01 — Realtime Attention and Notification Engine
+
+### Outcome
+Important events reach the correct authorized person without requiring a page refresh, while routine events remain quiet/grouped.
+
+### Implementation
+1. AttentionEvent;
+2. NotificationPolicy/version;
+3. severity/risk mapping;
+4. recipient resolver;
+5. realtime in-app transport abstraction;
+6. browser reconnect/cursor recovery;
+7. delivery records;
+8. acknowledgement;
+9. durable escalation timer;
+10. fallback channels;
+11. grouping/deduplication;
+12. quiet-hours/urgent-override policy;
+13. unread/ack state;
+14. notification admin configuration;
+15. telemetry/dashboard.
+
+### No-hardcode
+- severity thresholds;
+- recipients/roles;
+- channels;
+- acknowledgement windows;
+- escalation chain;
+- quiet hours;
+- templates;
+- grouping window;
+- fallback order.
+
+### Tests
+- policy matching unit tests;
+- recipient permission/tenant integration tests;
+- same event idempotency;
+- grouping/mass-Incident anti-noise;
+- realtime reconnect recovery;
+- durable acknowledgement timer;
+- escalation;
+- revoked user receives nothing;
+- deep-link reauthorization;
+- E2E urgent event → in-app notification without refresh;
+- E2E no ACK → escalation;
+- E2E ordinary event → no urgent interruption;
+- smoke with fake realtime/outbound provider.
+
+---
+
 # PROPERTY MANAGEMENT — MASTER DATA
 
 ## F07 — Buildings, Premises and Service Areas
@@ -602,31 +654,57 @@ Resident/customer can submit structured request from web.
 
 ---
 
-## F12 — Email Inbox
+## F12 — Email Inbox: Yandex Mail, Mail.ru and Generic IMAP/SMTP
 
 ### Outcome
-Incoming email becomes Communication and then Case/document/task according to configured policy.
+Incoming company email appears in Start near-real-time and becomes Communication, then Case/Document/Task/LegalCase according to configured policy.
 
 ### Implementation
 1. EmailProvider port;
-2. provider adapter;
-3. tenant mailbox mapping;
-4. polling/webhook mode depending provider;
-5. body/attachment normalization;
-6. dedup by provider message;
-7. thread mapping;
-8. review queue;
-9. ingestion telemetry.
+2. YandexMailAdapter;
+3. MailRuAdapter;
+4. GenericImapSmtpAdapter;
+5. provider-appropriate auth (OAuth/XOAUTH2 where supported/configured, secure app credentials where required);
+6. tenant mailbox mapping;
+7. webhook/push mode where available;
+8. IMAP IDLE/long-lived watch where supported;
+9. adaptive polling fallback;
+10. periodic reconciliation;
+11. provider UID/message ID cursor;
+12. body/attachment normalization;
+13. thread mapping;
+14. dedup watch + reconciliation;
+15. outgoing send/reply contract;
+16. urgent pre-classification hook;
+17. ingestion lag/health telemetry;
+18. admin test/reconnect/disable controls.
+
+### No-hardcode
+- mailbox addresses;
+- auth mode;
+- folders;
+- watch/poll strategy;
+- polling/reconciliation intervals;
+- urgent sender/rule lists;
+- processing routes.
 
 ### Tests
-- adapter contract;
+- common EmailProvider contract suite;
+- Yandex adapter mapping/auth fixtures;
+- Mail.ru adapter mapping/auth fixtures;
+- generic IMAP/SMTP fixtures;
 - auth failure;
-- timeout/retry;
-- duplicate delivery;
-- wrong tenant mapping;
+- timeout/reconnect;
+- duplicate UID/message;
+- message arriving during disconnect recovered by reconciliation;
+- watch + reconcile remains one Communication;
+- wrong tenant mailbox mapping;
 - attachment ingestion;
-- E2E email fixture → Case;
-- degraded-provider smoke.
+- outbound reply;
+- ingestion lag metrics;
+- E2E fake mailbox → Communication → Case;
+- E2E urgent email → AttentionEvent;
+- degraded/reconnect smoke.
 
 ---
 
@@ -812,10 +890,10 @@ Mass identical reports preserve each resident Case but generate one operational 
 
 ---
 
-## F19 — Resident Feedback and Notification Engine
+## F19 — Resident Feedback over Realtime Notification Engine
 
 ### Outcome
-Residents get consistent state feedback without manual messages.
+Residents get consistent state feedback without manual messages, reusing C01 delivery/policy infrastructure instead of a separate notification subsystem.
 
 ### Implementation
 1. NotificationPolicy;
