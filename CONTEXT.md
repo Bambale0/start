@@ -1,180 +1,512 @@
-# Product Context and Vocabulary
+# Product Context, Current State and Execution Ledger
 
-This file is the compact shared language for product, engineering and agents.
+This file is the canonical live context for product and implementation work.
 
-## Product
+It serves four purposes:
 
-**Start** is the repository working name for an AI-enabled Business Operating System.
+1. shared domain vocabulary;
+2. honest audit of what is actually implemented;
+3. master implementation order;
+4. live per-feature execution ledger.
+
+Before implementing any feature, update **Active Feature Execution** with a fresh audit and detailed plan.
+
+---
+
+# 1. Product
+
+**Start** is an AI-enabled multi-company Business Operating System.
 
 It is not a single-company CRM and not an ERP replacement.
 
 It provides:
 
 - isolated company workspaces;
-- shared identity and permissions;
+- global identity with scoped memberships;
 - universal workflow/case/task/asset primitives;
 - vertical industry packs;
 - integration orchestration;
 - role-specific interfaces;
-- cross-company owner control;
-- management intelligence.
+- cross-company Owner Control;
+- management intelligence;
+- an authorized knowledge/retrieval layer for large document and communication corpora.
 
-## Core hierarchy
+The first vertical is **Property Management**, designed generically for управляющие организации / ЖСК / ТСЖ and similar operators.
 
-```text
+No customer/company name belongs in the universal core or Property Management contract.
+
+---
+
+# 2. Core hierarchy
+
+~~~text
 Group
 └── Organization
     └── BusinessUnit
         └── Object / Project / Location
-            └── Process / Case / WorkOrder
-```
+            └── Process / Case / Incident / WorkOrder / Task
+~~~
 
-The hierarchy is flexible: not every organization needs every level.
+Not every organization needs every level.
 
-## Canonical terms
+---
 
-### Group
+# 3. Canonical terms
 
-A management/ownership aggregation of organizations.
+## Group
+Management/ownership aggregation of organizations.
 
-It is not assumed to be a legal holding company. Group membership is an application-level construct used for scoped cross-company access and analytics.
+## Organization
+Company or independent operational/legal business boundary. Organization is a tenant and security boundary.
 
-### Organization
+## BusinessUnit
+Department, branch, region, team, service line or operational subdivision.
 
-A company or independent operational/legal business boundary.
+## User
+Global authenticated identity. A User has no business access merely by existing.
 
-An organization is a tenant and security boundary.
+## Membership
+Connects User to Group / Organization / BusinessUnit scope with explicit permissions.
 
-### BusinessUnit
+## Role / Permission
+Role is a reusable permission bundle. Permission is an atomic backend capability. Contextual policy can narrow access.
 
-A department, branch, region, service line, site team or other subdivision.
+## Person
+Business person record: resident, customer, applicant, employee contact, driver, etc. Not automatically an authenticated User.
 
-### User
+## Counterparty
+External legal entity / entrepreneur / contractor / supplier.
 
-A globally authenticated human account.
+## Object
+Managed business context, e.g. Building, Premise, ConstructionSite, Depot.
 
-A User does not gain access merely by existing.
+## Asset
+Physical/logical resource with lifecycle/state/cost history.
 
-### Membership
+## Communication
+Normalized email, message, call, web submission or notification.
 
-Connects a User to a Group or Organization with explicit role/permission scope.
+## Case
+Business item requiring handling and history.
 
-### Role / Permission
+## Incident
+Shared operational event affecting many Cases/Objects/People.
 
-A Role is a reusable permission bundle.
+## WorkOrder
+Executable work assigned to a person/team/contractor.
 
-Permission is the atomic authorization capability.
+## Task
+Smaller actionable unit linked to another business process/entity.
 
-The system supports contextual restrictions in addition to role permissions.
+## Workflow
+Versioned process logic:
+~~~text
+trigger → conditions → actions → assignment → SLA/timers → escalation → result
+~~~
 
-### Person
+## Document
+Business document metadata and authoritative storage/provider reference.
 
-A domain person: resident, client, employee contact, patient contact, etc. Do not assume every Person is an authenticated User.
+## FinancialEvent
+Normalized management fact/intent about money. Not a statutory accounting entry by default.
 
-### Counterparty
+## KnowledgeSource
+Reference to an authoritative Document, Communication or other business entity that can be indexed for retrieval.
 
-An external legal entity/self-employed/provider/contractor with which the organization interacts.
+## KnowledgeChunk
+Derived, rebuildable text segment used for lexical/semantic search. It carries tenant/permission scope and source version metadata.
 
-### Object
+## EmbeddingRecord
+Derived vector representation of a KnowledgeChunk. It is never a source of truth.
 
-A managed business context.
+## Vertical Pack
+Configuration/extension package mapping universal primitives to an industry.
 
-Examples by vertical:
-
-- property management: building/premise;
-- construction: construction site/project object;
-- fleet: depot or operational site;
-- service: customer facility.
-
-### Asset
-
-A physical or logical asset with lifecycle/state/cost history.
-
-Examples: pump, elevator, truck, excavator, production line.
-
-### Case
-
-An item that requires business handling and history.
-
-Examples: complaint, request, defect, order, claim.
-
-### Incident
-
-A shared event/problem that may affect multiple cases/objects/people.
-
-Example: one water outage with 100 resident reports.
-
-### WorkOrder
-
-Executable operational work assigned to a team/person/contractor.
-
-### Task
-
-A smaller actionable unit. Tasks may belong to workflows, cases, work orders, documents or projects.
-
-### Workflow
-
-Configured process logic: trigger → conditions → actions → SLA → escalation → result.
-
-### Document
-
-A business document and its metadata/status/linkage. The legally significant original may remain in an EDO system.
-
-### FinancialEvent
-
-A normalized management event describing money-related facts or intentions: invoice, payment, obligation, budget event, allocation. It is not a replacement for statutory accounting entries.
-
-### Communication
-
-A normalized inbound/outbound communication across email, telephony, messenger, SMS, web or another channel.
-
-### Vertical Pack
-
-A configuration/extension package that maps universal core primitives to a domain.
-
-Initial target packs:
-
+Initial packs:
 - Property Management;
 - Construction;
-- Fleet/Service.
+- Fleet / Service.
 
-### Owner Control
+## Owner Control
+High-level UX for founders/owners/group managers focused on money, risk, deviations, assets, projects, contractors and decisions.
 
-A separate UX abstraction for founders/owners/group-level managers.
+---
 
-Owner Control prioritizes:
+# 4. Current implementation audit
 
-- money;
-- risk;
-- deviations;
-- health scores;
-- assets;
-- projects;
-- contractors;
-- management decisions.
+**Audit baseline:** main at `c87b39a03edf15db21a0d009740d83dfd94f40c9` for repository state review. Documentation-only commits may advance main without changing implemented runtime capabilities.
 
-It does not default to raw operational queues.
+## Actually implemented
 
-### System of Record
+### Application foundation
+- Python package;
+- FastAPI application factory;
+- `/health/live`;
+- `/health/ready`;
+- typed Pydantic settings;
+- structured logging bootstrap;
+- Dockerfile;
+- Docker Compose with API/PostgreSQL/Redis foundation.
 
-The authoritative source for a class of data.
+### Platform primitives
+- `RequestContext`;
+- explicit organization-context check;
+- explicit permission check helper;
+- generic `DomainEvent` envelope.
 
-Start may mirror and enrich external data without becoming its source of truth.
+### Quality/tooling
+- Ruff;
+- mypy strict;
+- pytest;
+- GitHub Actions CI;
+- compile/lint/format/type/test checks;
+- basic health and RequestContext tests.
 
-## Pilot framing
+### Documentation/architecture
+- Product spec;
+- Property Management spec;
+- Owner Control spec;
+- Admin Control Plane spec;
+- security/integration/observability docs;
+- test strategy;
+- ADRs;
+- implementation roadmap;
+- engineering rules;
+- accepted ADR for a derived knowledge index with PostgreSQL + pgvector first.
 
-The initial pilot use case is the property-management operation of **Континент**.
+## Partially implemented
 
-The employee-facing system should cover the useful functional class of dispatching tools while using automation to reduce manual reading, copying, routing, reminding and reporting.
+### Tenant / authorization
+Only request-context primitives exist.
 
-The pilot is a proving ground for the universal core, not a reason to hardcode property-management concepts into the core.
+Missing:
+- persisted users/groups/organizations;
+- memberships;
+- roles/permissions;
+- authentication/session management;
+- PostgreSQL RLS;
+- tenant-aware repositories;
+- admin access management.
 
-## Product success
+### Observability
+Structured logger bootstrap exists.
 
-The product is successful when:
+Missing:
+- request IDs;
+- trace propagation;
+- OpenTelemetry;
+- persistent audit;
+- business metrics;
+- dashboards/alerts.
 
-- routine work becomes machine-handled;
-- humans handle exceptions and decisions;
-- managers control deviations rather than chase statuses;
-- owners can safely see and manage all authorized businesses from one account;
-- onboarding a new business becomes configuration/integration work rather than a new CRM codebase.
+### Infrastructure
+PostgreSQL and Redis containers exist.
+
+Missing:
+- SQLAlchemy persistence;
+- Alembic;
+- DB readiness;
+- background queue;
+- object storage;
+- production deploy;
+- backup/restore verification.
+
+## Not implemented
+
+No Property Management business feature is implemented.
+
+Also not implemented:
+- vector extension/schema;
+- document parsing/chunking;
+- embeddings;
+- hybrid retrieval;
+- RAG/knowledge search;
+- browser E2E suite;
+- production-like smoke suite.
+
+## Important rule
+
+Documentation describes target behavior; it must never be interpreted as proof that the capability already exists.
+
+---
+
+# 5. Mandatory implementation lifecycle
+
+Every feature follows this process.
+
+## Step 0 — fresh audit before production code
+
+Inspect:
+- current branch/tree and latest commit;
+- `CONTEXT.md`;
+- relevant spec/ADR;
+- overlapping implementation;
+- latest migrations;
+- permissions/tenant enforcement;
+- admin/configuration behavior;
+- tests at public seams;
+- E2E/smoke coverage;
+- CI;
+- integrations involved;
+- logs/metrics if runtime exists;
+- related issues.
+
+Record:
+1. exists;
+2. partial;
+3. missing;
+4. reusable;
+5. prefactor needed;
+6. risks;
+7. schema/migration impact;
+8. integration impact;
+9. agreed test seams;
+10. exact implementation plan.
+
+## Step 1 — detailed feature plan
+
+Before code, document in **Active Feature Execution**:
+- user-visible outcome;
+- dependencies/blockers;
+- schema;
+- API;
+- UI;
+- configuration/admin;
+- permissions/tenant scope;
+- events/workflows;
+- observability/audit;
+- migrations/rollout;
+- tests;
+- E2E;
+- smoke;
+- acceptance criteria.
+
+## Step 2 — no-hardcode gate
+
+Anything that may differ by organization/process is configuration-driven unless proven immutable.
+
+Examples:
+- case categories/statuses/priorities;
+- SLA/routing/escalation;
+- chat trigger rules;
+- required form fields;
+- notification templates/channels;
+- asset/planned-work/legal-document types;
+- estimate lifecycle;
+- AI provider/model/prompt/confidence policy;
+- embedding provider/model;
+- chunking strategy;
+- retrieval weights;
+- report definitions.
+
+Runtime business configuration must be typed, validated, tenant-scoped and manageable through the control plane.
+
+## Step 3 — vertical slice + TDD
+
+Preferred seams:
+1. HTTP/API;
+2. domain/application service for complex deterministic logic;
+3. provider adapter contract;
+4. browser/user journey;
+5. deployed smoke seam.
+
+Loop:
+~~~text
+RED behavior test
+→ minimal implementation
+→ GREEN
+→ focused checks
+→ update CONTEXT progress
+→ next tracer bullet
+~~~
+
+## Step 4 — mandatory verification matrix
+
+Every feature explicitly covers or marks N/A with reason:
+- unit/domain;
+- repository/DB integration;
+- migration;
+- authorization;
+- tenant isolation/RLS;
+- workflow/state;
+- idempotency/retry;
+- provider contract;
+- API integration;
+- E2E happy path;
+- E2E permission/error path;
+- smoke;
+- logs/metrics/audit;
+- no-hardcode/admin configurability.
+
+## Step 5 — review
+
+Two-axis review:
+- repository standards;
+- originating spec/ticket.
+
+No unresolved high-severity finding.
+
+## Step 6 — close execution ledger
+
+Record:
+- exact commit/PR;
+- test commands/results;
+- E2E result;
+- smoke result;
+- migrations;
+- tenant/security verification;
+- CI run;
+- known limits;
+- follow-ups.
+
+---
+
+# 6. Master implementation order
+
+Detailed per-feature plans live in `docs/roadmap/FEATURE_IMPLEMENTATION_PLAN.md`.
+
+Required order:
+
+~~~text
+F00 Runtime/Test Foundation
+↓
+F01 Identity / Tenancy / Authorization / RLS
+↓
+F02 Configuration + Admin Control Plane
+↓
+F03 Universal Domain Core
+↓
+F04 Events / Outbox / Workflow / SLA
+↓
+F05 Knowledge & Retrieval / pgvector
+↓
+Property Management vertical slices
+↓
+Integration Hub
+↓
+Manager / Director Control
+↓
+Owner Control
+↓
+Second Vertical
+↓
+Cross-company Intelligence
+~~~
+
+Foundational tickets may overlap only when their security/data dependencies are explicit.
+
+---
+
+# 7. Active Feature Execution
+
+## Feature
+
+**F00 — Runtime/Test Foundation**
+
+Status: **PLANNED — implementation not started in this execution ledger.**
+
+## Audit baseline
+
+Current runtime has only FastAPI scaffold, health endpoints, typed settings, structured logger bootstrap, RequestContext/DomainEvent primitives and basic CI/tests.
+
+Missing:
+- SQLAlchemy persistence;
+- Alembic;
+- real PostgreSQL integration tests;
+- pgvector extension verification;
+- request correlation middleware;
+- persistent audit;
+- E2E harness;
+- production-like smoke harness;
+- container build check;
+- migration check;
+- DB readiness.
+
+## User/developer outcome
+
+After F00, every later feature can be built against repeatable database, migration, E2E and smoke infrastructure instead of adding ad-hoc test setup per feature.
+
+## Planned changes
+
+1. add async SQLAlchemy engine/session boundary;
+2. add Alembic baseline;
+3. use PostgreSQL image/environment capable of pgvector extension;
+4. add migration enabling `vector` extension, but no knowledge tables yet;
+5. add DB-backed readiness;
+6. add request/correlation middleware;
+7. add persistent AuditEvent skeleton or explicitly defer persistence to F01 with a tested interface;
+8. create integration-test database fixture;
+9. create deterministic synthetic tenant/test data factory;
+10. add E2E harness;
+11. add smoke harness against built container;
+12. add container build + migration + smoke jobs to CI.
+
+## No-hardcode decisions
+
+- database/Redis URLs from settings;
+- test DB credentials isolated to CI/dev;
+- no production credentials;
+- vector dimensions are not defined in foundation;
+- no embedding model is selected in source;
+- no tenant/business config in environment constants.
+
+## Test seams
+
+- application HTTP seam;
+- database session/repository infrastructure seam;
+- built Docker service seam.
+
+## Planned verification
+
+### Unit
+- settings parsing where meaningful;
+- correlation/context helpers.
+
+### Integration
+- Postgres connection;
+- transaction rollback fixture;
+- vector extension present;
+- migration from empty DB;
+- DB readiness failure/success.
+
+### E2E
+- launch app against clean Postgres;
+- liveness/readiness;
+- correlation header round-trip.
+
+### Smoke
+- build image;
+- boot API + Postgres + Redis;
+- run migrations;
+- health/readiness returns healthy.
+
+### CI
+- compile;
+- Ruff;
+- mypy;
+- pytest unit/integration;
+- migration check;
+- Docker build;
+- smoke.
+
+## Acceptance criteria
+
+- clean environment reaches green state using documented commands;
+- migrations create the same schema consistently;
+- pgvector extension availability is verified;
+- tests never rely on developer machine state;
+- CI verifies exact commit;
+- no business feature is added during F00.
+
+## Progress log
+
+- 2026-09-15: repository audit completed.
+- 2026-09-15: mandatory feature-audit and execution-ledger process added to AGENTS.md.
+- 2026-09-15: vector knowledge layer accepted architecturally via ADR 0007.
+- Implementation has not started yet.
+
+---
+
+# 8. Execution history
+
+No business feature has been completed yet under the mandatory execution-ledger process.
