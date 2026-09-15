@@ -204,6 +204,23 @@ Do not allow document text to redefine system/tool policies.
 
 AI may recommend, prepare or route high-impact actions but cannot silently bypass configured human approvals.
 
+## 11A. Knowledge retrieval security
+
+Vector similarity is never an authorization mechanism.
+
+Required controls:
+
+- organization/group scope is resolved server-side before retrieval;
+- KnowledgeChunk rows carry direct tenant ownership;
+- PostgreSQL RLS applies to tenant-bound chunks where practical;
+- document/entity-level permissions are evaluated before returning evidence;
+- revoked permissions/deleted sources must stop retrieval immediately or fail closed;
+- no cross-tenant ANN candidate may enter model context merely because it is semantically similar;
+- external document text is untrusted data and cannot redefine system/tool instructions;
+- sensitive legal/financial corpora require their normal permissions in addition to tenant scope.
+
+Retrieval tests that expose evidence from an unauthorized tenant are release blockers.
+
 ## 12. Session security
 
 Support:
