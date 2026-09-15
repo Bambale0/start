@@ -204,6 +204,28 @@ Do not allow document text to redefine system/tool policies.
 
 AI may recommend, prepare or route high-impact actions but cannot silently bypass configured human approvals.
 
+### Agent contour restrictions
+
+Interactive Employee Agent:
+
+- inherits the invoking user's exact effective scope;
+- defaults to read capabilities;
+- cannot gain permissions through conversation;
+- cannot use hidden cross-tenant memory;
+- writes pass through Action Gateway.
+
+Routine Automation Agent:
+
+- runs under a dedicated service identity plus explicit organization scope;
+- receives only the configured task envelope/evidence;
+- has no generic unrestricted CRUD capability;
+- returns structured proposals to deterministic workflows;
+- cannot widen its own scope or toolset.
+
+Tool availability is policy-controlled and versioned.
+
+High-impact capabilities are never exposed as ordinary generic agent tools.
+
 ## 11A. Knowledge retrieval security
 
 Vector similarity is never an authorization mechanism.
