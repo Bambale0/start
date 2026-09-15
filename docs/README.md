@@ -13,6 +13,7 @@
 - [Security](architecture/SECURITY.md)
 - [Integrations](architecture/INTEGRATIONS.md)
 - [Observability](architecture/OBSERVABILITY.md)
+- [AI Agent Architecture](architecture/AI_AGENTS.md)
 
 ## Specifications
 
