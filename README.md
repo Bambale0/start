@@ -1,45 +1,532 @@
-# Start — AI Business OS
+<div align="center">
 
-> Working name for a multi-company operating system that unifies day-to-day operations, integrations, analytics and owner-level control without replacing specialized systems such as 1C, EDI/EDO providers or banks.
+# START — AI Business OS
 
-## Product thesis
+### Одна система для нескольких бизнесов.  
+### От операционной рутины сотрудников — до единого кабинета собственника.
 
-Each company receives its own isolated operational workspace tailored to its business domain. Employees see only the company, objects, processes and permissions relevant to their work.
+**Управляйте группой компаний из одного окна: деньги, риски, процессы, подрядчики, объекты, документы и отклонения — без ежедневных разъездов между офисами и десятка разрозненных программ.**
 
-Owners and founders use a global account with access to the companies and groups where they have explicit membership. Their interface is intentionally different from the employee CRM: it focuses on money, risks, deviations, assets, projects, quality and decisions that require management attention.
+[![CI](https://github.com/Bambale0/start/actions/workflows/ci.yml/badge.svg)](https://github.com/Bambale0/start/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/Python-3.12+-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-async-green)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-multi--tenant-blue)
+![Architecture](https://img.shields.io/badge/Architecture-modular%20monolith-black)
+![Status](https://img.shields.io/badge/Status-foundation%20%2F%20active%20development-orange)
 
-The platform's purpose is to:
+</div>
 
-- reduce manual operational work;
-- remove dependence on inboxes, chats and spreadsheets;
-- lower cost per business operation;
-- improve SLA, quality and auditability;
-- connect existing 1C, EDO, banks, telephony, email and messengers into one workflow layer;
-- give owners a single control surface across several independent businesses;
-- make new industry deployments configuration-driven instead of separate CRM rewrites.
+---
 
-## First proving ground
+## Зачем существует Start
 
-The first vertical pack is **Property Management**, with `Континент` as the pilot use case.
+У владельца нескольких бизнесов обычно нет проблемы «не хватает ещё одной CRM».
 
-The pack is expected to cover the useful functional class of dispatching platforms such as Dispatcher24:
+У него другая проблема:
 
-- omnichannel intake;
-- resident/customer cases;
-- buildings and managed objects;
-- dispatching and work orders;
-- executors and contractors;
+- один бизнес живёт в 1С;
+- второй — в Excel и чатах;
+- третий — в отраслевой программе;
+- документы приходят через ЭДО;
+- деньги лежат в нескольких банках;
+- заявки приходят в почту, мессенджеры и по телефону;
+- руководители собирают отчёты вручную;
+- реальное состояние бизнеса часто становится понятно только после звонков, совещаний и поездок по офисам.
+
+**Start создаётся как единый цифровой слой над всей этой структурой.**
+
+Каждая компания продолжает работать как отдельный бизнес со своими сотрудниками, процессами, 1С, банком, ЭДО и правами доступа.
+
+Но собственник получает **одну глобальную учётную запись**, из которой видит всю разрешённую ему структуру.
+
+~~~text
+                         СОБСТВЕННИК
+                              │
+                       START / OWNER CONTROL
+                              │
+             ┌────────────────┼────────────────┐
+             │                │                │
+        Компания A       Компания B       Компания C
+             │                │                │
+          ЖКХ / УК         Стройка         Автопарк
+             │                │                │
+        сотрудники        сотрудники       сотрудники
+        процессы          проекты          техника
+        подрядчики        подрядчики       ремонты
+             │                │                │
+             └────────────────┼────────────────┘
+                              │
+                    1С / ЭДО / Банки / API
+                    Почта / Телефония / Чаты
+~~~
+
+---
+
+# 15 минут вместо ежедневного ручного контроля
+
+Цель Owner Control — не заставить собственника работать ещё в одной программе.
+
+Наоборот: **сжать весь управленческий шум до короткого списка действительно важных решений.**
+
+Утром владелец открывает Start:
+
+~~~text
+МОЯ ГРУППА
+
+Континент            94/100   🟢
+Строительство        78/100   🟡
+Автопарк             86/100   🟢
+
+Деньги
+Остатки              48.2 млн ₽
+К получению           11.4 млн ₽
+К оплате               8.3 млн ₽
+
+Требует внимания: 3
+
+1. Проект X отстаёт от графика на 11 дней.
+2. Подрядчик Y третий месяц нарушает SLA.
+3. На двух объектах резко выросли повторные ремонты.
+~~~
+
+И задаёт системе:
+
+> **Что сегодня требует моего решения?**
+
+Вместо просмотра сотен заявок, писем и отчётов Start должен показать собственнику только:
+
+- где теряются деньги;
+- где ухудшается качество;
+- где срываются сроки;
+- какие активы простаивают;
+- какие подрядчики работают хуже нормы;
+- где есть системная проблема;
+- какое решение действительно требует участия владельца.
+
+**Операционной рутиной занимается операционный контур.  
+Собственник управляет исключениями и решениями.**
+
+---
+
+# Для сотрудников это программа их компании
+
+Start не превращает все компании в один общий хаос.
+
+Каждый бизнес — отдельный tenant и отдельный защищённый контур.
+
+Сотрудник управляющей компании видит:
+
+~~~text
+Континент
+
+Заявки
+Дома
+Жители
+Аварии
+Работы
+Исполнители
+Подрядчики
+Документы
+~~~
+
+Строительная компания может видеть:
+
+~~~text
+Проекты
+Объекты
+Этапы
+Дефекты
+Подрядчики
+Приёмка
+Документы
+~~~
+
+Автопарк:
+
+~~~text
+Техника
+Водители
+Рейсы
+ТО
+Ремонты
+Простой
+Затраты
+~~~
+
+При этом под капотом используется **одно универсальное ядро**, а отраслевое поведение подключается через Vertical Packs.
+
+---
+
+# Для владельца — сразу вся структура
+
+Одна глобальная учётная запись может иметь разные права в разных компаниях:
+
+~~~text
+User
+│
+├── Континент       → OWNER
+├── Строительство   → OWNER
+├── Автопарк        → OWNER
+└── Компания N      → ANALYTICS / READ ONLY
+~~~
+
+Это не скрытый «суперадмин».
+
+Доступ строится через явные membership + permissions, поэтому можно дать человеку:
+
+- просмотр всех компаний;
+- финансовую аналитику;
+- доступ к документам;
+- управление конкретной организацией;
+
+и при этом **не давать**, например, право подписывать документы или подтверждать платежи.
+
+---
+
+# Не очередная CRM
+
+Обычная CRM чаще всего отвечает на вопрос:
+
+> **Что происходит с клиентами и заявками?**
+
+Start проектируется для другого уровня:
+
+> **Что происходит с бизнесом целиком и где сейчас требуется управленческое решение?**
+
+Платформа объединяет:
+
+| Контур | Что даёт Start |
+|---|---|
+| **Операции** | заявки, процессы, работы, SLA, задачи |
+| **Объекты** | здания, площадки, филиалы, проекты |
+| **Активы** | техника, оборудование, инженерные системы |
+| **Люди** | сотрудники, клиенты, исполнители |
+| **Подрядчики** | стоимость, сроки, качество, переделки |
+| **Документы** | договоры, согласования, ЭДО |
+| **Финансы** | управленческие события, 1С, банки, план/факт |
+| **Коммуникации** | email, телефония, web, MAX, Telegram, VK |
+| **AI** | классификация, маршрутизация, анализ, аномалии |
+| **Owner Control** | вся группа компаний в одном окне |
+
+---
+
+# Один интерфейс — существующие системы остаются
+
+Start не пытается переписать 1С, стать банком или новым оператором ЭДО.
+
+Это принципиальное архитектурное решение.
+
+~~~text
+                   START
+                     │
+          ┌──────────┼──────────┐
+          │          │          │
+         1С         ЭДО        Банки
+          │          │          │
+     бухгалтерия   оригиналы   деньги
+~~~
+
+**Источники истины остаются специализированными:**
+
+- 1С — бухгалтерский и налоговый учёт;
+- ЭДО — юридически значимые документы и подписи;
+- банк — реальные остатки и транзакции;
+- Start — процессы, автоматизация, контроль и управленческая аналитика.
+
+Для пользователя это при этом может выглядеть как одна карточка:
+
+~~~text
+Договор №1142
+ООО Подрядчик
+1 840 000 ₽
+
+✓ Получен через ЭДО
+✓ Проверен
+✓ Согласован
+✓ Подписан
+✓ Отражён в 1С
+○ Ожидает оплаты
+~~~
+
+Не нужно вручную прыгать между пятью программами только чтобы понять состояние одного процесса.
+
+---
+
+# AI здесь не ради кнопки «спросить»
+
+AI используется там, где сегодня расходуется человеческое время.
+
+Например входящее обращение:
+
+~~~text
+Email / звонок / MAX / Telegram / VK / Web
+                    │
+                    ▼
+                AI Intake
+                    │
+        ┌───────────┼───────────┐
+        ▼           ▼           ▼
+      кто?       где?        что случилось?
+        │           │           │
+        └───────────┼───────────┘
+                    ▼
+              Case / Incident
+                    ▼
+                Workflow
+                    ▼
+        исполнитель + SLA + контроль
+~~~
+
+Система должна автоматически:
+
+- понять источник;
+- определить человека и объект;
+- классифицировать проблему;
+- найти дубликаты;
+- распознать массовый инцидент;
+- назначить ответственного;
+- поставить SLA;
+- напомнить;
+- эскалировать;
+- уведомить клиента;
+- собрать управленческую аналитику.
+
+Человек подключается там, где есть неоднозначность, риск или реальное решение.
+
+---
+
+# Первый Vertical Pack — управление недвижимостью / ЖКХ
+
+Первый реальный сценарий — **Property Management Pack**.
+
+Он проектируется на функциональном уровне современных диспетчерских систем:
+
+- единый inbox;
+- заявки жителей;
+- дома и помещения;
+- аварии;
+- исполнители;
+- подрядчики;
+- work orders;
 - SLA;
-- incidents and mass outages;
-- notifications;
-- operator and manager dashboards;
-- analytics.
+- уведомления;
+- аналитика;
+- мобильный контур исполнителя.
 
-The differentiator is not another ticketing UI. The platform automates intake, classification, deduplication, routing, reminders, escalation and reporting, and then exposes the same universal core to construction, fleet/service and other businesses.
+Но задача не в том, чтобы просто повторить существующую диспетчерскую.
 
-## Product layers
+## Ключевая разница — автоматизируется сам операторский труд
 
-```text
+Не:
+
+> AI подготовил заявку — оператор нажал «Создать».
+
+А:
+
+> **если система уверена и политика разрешает — заявка создана, классифицирована и отправлена исполнителю автоматически.**
+
+Не:
+
+> оператор прочитал 180 писем.
+
+А:
+
+~~~text
+Сегодня получено: 180
+
+✓ 97 обработано автоматически
+✓ 43 привязано к существующим процессам
+✓ 26 информационных
+✓ 10 создали новые заявки
+⚠ 4 требуют решения человека
+~~~
+
+Сотрудник работает не как ручной маршрутизатор информации, а как **оператор исключений**.
+
+---
+
+# Один инцидент вместо сотни дублей
+
+Если в одном доме нет воды и приходит 100 обращений, система не должна создавать 100 независимых работ сантехнику.
+
+~~~text
+Incident: нет воды
+
+├── 100 обращений
+├── 1 причина
+├── 1 ответственная служба
+├── 1 SLA
+├── несколько затронутых объектов
+└── 100 автоматических уведомлений
+~~~
+
+Это снижает нагрузку, уменьшает ошибки и даёт руководителю реальную картину события.
+
+---
+
+# Следующие Vertical Packs
+
+Универсальное ядро позволяет подключать новые типы бизнеса без создания новой CRM с нуля.
+
+### Construction
+
+~~~text
+Object      → стройплощадка
+Case        → дефект / замечание
+WorkOrder   → строительная работа
+Contractor  → субподрядчик
+Asset       → техника
+~~~
+
+### Fleet / Service
+
+~~~text
+Asset       → автомобиль / спецтехника
+Case        → поломка / потребность в ТО
+WorkOrder   → ремонт
+Person      → водитель
+Counterparty→ СТО / поставщик
+~~~
+
+Дальше могут подключаться другие сферы, если они укладываются в универсальную модель:
+
+**объект → событие → процесс → исполнитель → ресурс → документ → деньги → результат.**
+
+---
+
+# Самая дорогая функция — видеть бизнес целиком
+
+Когда несколько компаний подключены к одной платформе, появляется аналитика, которой нет внутри отдельной CRM.
+
+Например:
+
+~~~text
+Контрагент ООО X
+
+Континент          4.2 млн ₽
+Строительство     11.7 млн ₽
+Автопарк           2.9 млн ₽
+────────────────────────────
+Всего             18.8 млн ₽
+~~~
+
+Start сможет находить:
+
+- одного подрядчика в нескольких компаниях;
+- разную цену одинаковой закупки;
+- повторные ремонты одного класса активов;
+- простаивающую технику;
+- компании с одинаковой административной рутиной;
+- системные задержки;
+- неэффективные цепочки согласования;
+- потенциальные точки консолидации закупок.
+
+Именно здесь система превращается из CRM в **управляющий интеллект группы компаний**.
+
+---
+
+# Почему такой продукт стоит дорого
+
+Стоимость подобной системы — не стоимость «нарисовать несколько экранов».
+
+Здесь нужно правильно спроектировать и связать:
+
+### 1. Несколько юридически и операционно независимых бизнесов
+
+Нельзя случайно показать сотруднику одной компании данные другой.
+
+Tenant isolation — часть архитектуры и безопасности, а не фильтр в интерфейсе.
+
+### 2. Права собственников, директоров, менеджеров и исполнителей
+
+Один пользователь может быть владельцем одной компании, директором другой и иметь только аналитику в третьей.
+
+### 3. Реальные бизнес-процессы
+
+Workflow Engine должен переживать перезапуски, SLA, таймеры, эскалации, повторную доставку событий и изменения процессов.
+
+### 4. Интеграции
+
+1С, ЭДО, банки, телефония, почта, мессенджеры — у каждого свои:
+
+- API;
+- авторизация;
+- webhooks;
+- rate limits;
+- ошибки;
+- повторная доставка;
+- reconciliation;
+- безопасность.
+
+### 5. Финансовая и документальная ответственность
+
+Система должна чётко различать:
+
+- что она показывает;
+- что она рекомендует;
+- что она может подготовить;
+- что имеет право выполнить.
+
+### 6. AI, которому нельзя доверять права доступа
+
+AI может классифицировать и анализировать, но не может самостоятельно обходить RBAC, tenant isolation, банковское подтверждение или юридическую подпись.
+
+### 7. Наблюдаемость
+
+В серьёзном B2B-продукте недостаточно «вроде работает».
+
+Для критического процесса нужно понимать:
+
+- кто;
+- что;
+- когда;
+- в какой компании;
+- в каком workflow;
+- через какую интеграцию;
+- сколько заняло;
+- где сломалось;
+- что увидел пользователь.
+
+### 8. Измеримый экономический эффект
+
+Платформа должна считать не количество красивых экранов, а:
+
+- **Human Intervention Rate**;
+- Automation Rate;
+- стоимость обработки процесса;
+- SLA;
+- повторные работы;
+- загрузку;
+- потери времени;
+- Management Attention Required.
+
+Поэтому цена продукта — это цена **перестройки операционного управления**, а не цена типовой CRUD-CRM.
+
+---
+
+# Что получает бизнес
+
+При успешном внедрении цель не просто «оцифровать».
+
+Цель:
+
+**меньше ручного труда → меньше ошибок → быстрее процессы → меньше управленческого шума → лучше контроль → возможность масштабироваться без пропорционального роста административного штата.**
+
+Для собственника это означает:
+
+- меньше поездок по офисам ради статуса;
+- меньше созвонов «что там происходит?»;
+- меньше ручных отчётов;
+- единая картина по нескольким компаниям;
+- быстрый drill-down до первичных данных;
+- возможность контролировать бизнес из дома, офиса или поездки;
+- фокус на нескольких важных решениях вместо сотен операционных событий.
+
+---
+
+# Архитектура
+
+~~~text
                          START / BUSINESS OS
                                  │
                   ┌──────────────┴──────────────┐
@@ -52,7 +539,6 @@ The differentiator is not another ticketing UI. The platform automates intake, c
        ┌──────────┼──────────┐                  │
        │          │          │                  │
    Tenant A    Tenant B   Tenant C              │
-  Континент    Стройка    Автопарк              │
        │          │          │                  │
    Vertical    Vertical   Vertical              │
      Pack        Pack       Pack                │
@@ -61,85 +547,181 @@ The differentiator is not another ticketing UI. The platform automates intake, c
              UNIVERSAL CORE ◄───────────────────┘
                   │
       Workflow / Cases / Tasks / Assets
-      Documents / Finance Events / Comms
+      Documents / Finance / Communications
       Analytics / Audit / Integration Hub
                   │
       ┌───────────┼────────────┬────────────┐
       ▼           ▼            ▼            ▼
-      1C          EDO         Banks      Channels
-```
+      1С          ЭДО         Банки      Channels
+~~~
 
-## Architectural principles
+## Фундаментальные решения
 
-1. **One universal core, many vertical packs.** Industry-specific behavior is configuration and extension, not duplicated core logic.
-2. **Hard tenant isolation.** A company is an independent security and data boundary.
-3. **Global identity, scoped membership.** A person has one account; access comes from explicit group/company memberships and permissions.
-4. **Role-specific UX.** Worker, manager, director and owner receive different abstractions over the same data.
-5. **Owner attention is scarce.** Healthy operations stay quiet; deviations are escalated with context and recommended actions.
-6. **Existing systems remain systems of record where appropriate.** 1C owns statutory accounting, EDO owns legally significant originals, banks own balances and transactions; Start owns operational workflows and management intelligence.
-7. **Configuration over hardcode.** Mutable business rules, statuses, SLA, routing, thresholds, integrations and feature availability must be data-driven and admin-managed.
-8. **Events over hidden coupling.** Important state changes emit auditable domain events.
-9. **Observability from day one.** Technical telemetry and business-process telemetry are part of the definition of done.
-10. **Automation must be measurable.** Human Intervention Rate, cost per case, SLA, rework and management attention are first-class product KPIs.
-11. **Fail closed on sensitive automation.** Money, signatures, access, destructive actions and low-confidence AI decisions require explicit controls.
-12. **Modular monolith first.** Keep domain boundaries clean; split services only when scale or isolation justifies it.
+- **Universal Core + Vertical Packs**
+- **Global Identity + Scoped Memberships**
+- **Hard tenant isolation**
+- **RBAC + contextual authorization**
+- **PostgreSQL + Row Level Security**
+- **Modular Monolith first**
+- **Event-driven internal contracts**
+- **Transactional Outbox**
+- **Idempotent integrations**
+- **Configuration over hardcode**
+- **Observability from day one**
+- **AI cannot bypass deterministic security policy**
 
-## Repository map
+---
 
-- [AGENTS.md](AGENTS.md) — mandatory engineering rules for agents and contributors.
-- [CONTEXT.md](CONTEXT.md) — domain vocabulary and product context.
-- [docs/product/PRODUCT_SPEC.md](docs/product/PRODUCT_SPEC.md) — product requirements and personas.
-- [docs/architecture/SYSTEM_ARCHITECTURE.md](docs/architecture/SYSTEM_ARCHITECTURE.md) — target architecture.
-- [docs/architecture/DOMAIN_MODEL.md](docs/architecture/DOMAIN_MODEL.md) — canonical domain model.
-- [docs/architecture/SECURITY.md](docs/architecture/SECURITY.md) — tenancy, authorization and security.
-- [docs/architecture/INTEGRATIONS.md](docs/architecture/INTEGRATIONS.md) — integration hub and system-of-record rules.
-- [docs/architecture/OBSERVABILITY.md](docs/architecture/OBSERVABILITY.md) — logs, traces, metrics and audit.
-- [docs/specs/CONTINENT_PROPERTY_MANAGEMENT.md](docs/specs/CONTINENT_PROPERTY_MANAGEMENT.md) — first vertical/pilot specification.
-- [docs/specs/OWNER_CONTROL.md](docs/specs/OWNER_CONTROL.md) — global owner experience.
-- [docs/roadmap/IMPLEMENTATION_PLAN.md](docs/roadmap/IMPLEMENTATION_PLAN.md) — phased delivery plan.
-- [docs/testing/TEST_STRATEGY.md](docs/testing/TEST_STRATEGY.md) — testing and quality gates.
-- [docs/adr/](docs/adr/) — architecture decisions.
+# Технологический фундамент
 
-## Initial technical direction
+| Слой | Направление |
+|---|---|
+| Backend | Python 3.12+, FastAPI |
+| Data | PostgreSQL, SQLAlchemy 2.x, Alembic |
+| Cache / coordination | Redis |
+| Async work | queue abstraction + workers |
+| Frontend | React / TypeScript planned |
+| API | typed REST/OpenAPI |
+| Observability | structured logs + OpenTelemetry-compatible tracing |
+| Infrastructure | Docker-first |
+| Quality | Ruff, mypy, pytest, GitHub Actions |
+| Security | RBAC/ABAC, tenant context, planned RLS, MFA/passkeys for privileged users |
 
-- Python 3.12+
-- FastAPI
-- PostgreSQL
-- SQLAlchemy 2.x + Alembic
-- Redis for cache/coordination where justified
-- asynchronous workers behind a queue abstraction
-- React/TypeScript frontends planned as separate apps for office/manager and owner control
-- OpenTelemetry-compatible tracing
-- structured logging
-- Docker-first local/prod packaging
-- GitHub Actions CI
+---
 
-The exact infrastructure provider, queue implementation, frontend framework details and external integration vendors are intentionally replaceable behind contracts.
+# Качество — часть архитектуры
 
-## Delivery strategy
+В репозитории уже зафиксированы:
 
-The first commercial path is:
+- архитектурные ограничения;
+- security model;
+- domain model;
+- integration contracts;
+- observability strategy;
+- testing strategy;
+- ADR;
+- development runbooks;
+- operations runbooks;
+- CI quality gate;
+- product roadmap;
+- спецификация первого vertical;
+- спецификация Owner Control.
 
-```text
-Universal Core
-    ↓
-Континент Property Management Pack
-    ↓
-Automate dispatch/operator routine
-    ↓
-Measure real savings and quality
-    ↓
-Manager analytics
-    ↓
+### CI
+
+Текущий pipeline проверяет:
+
+~~~text
+compile
+↓
+Ruff lint
+↓
+Ruff format
+↓
+mypy
+↓
+pytest
+~~~
+
+Tenant leakage в целевой архитектуре считается **release blocker**.
+
+---
+
+# Статус проекта
+
+**Start находится в активной разработке.**
+
+Уже заложены:
+
+- продуктовая архитектура;
+- multi-company модель;
+- security boundaries;
+- integration architecture;
+- Owner Control specification;
+- Property Management specification;
+- Vertical Pack model;
+- KPI framework;
+- roadmap;
+- ADR;
+- минимальный FastAPI backend scaffold;
+- structured logging;
+- typed configuration;
+- request/tenant context primitives;
+- domain event envelope;
+- Docker/PostgreSQL/Redis foundation;
+- CI и первые automated tests.
+
+Следующий большой этап — **Identity / Tenancy / Authorization foundation**, после чего начинается первый рабочий vertical slice для Континента.
+
+> README описывает целевой продукт и архитектуру. Функции, отмеченные как planned/target, не выдаются за уже внедрённые в production.
+
+---
+
+# Roadmap
+
+~~~text
+Identity / Tenancy / Authorization
+          ↓
+Universal Operational Core
+          ↓
+Workflow + SLA + Events
+          ↓
+Континент / Property Management Pilot
+          ↓
+AI Office Automation
+          ↓
+Incident Engine
+          ↓
+Manager / Director Control
+          ↓
 Owner Control
-    ↓
-Connect second company
-    ↓
-Prove cross-industry universality
-    ↓
-Group-wide rollout
-    ↓
-Productize as standalone B2B SaaS/platform
-```
+          ↓
+1С / ЭДО / Banks
+          ↓
+Second Vertical
+          ↓
+Cross-company Intelligence
+          ↓
+Standalone B2B Platform
+~~~
 
-See the implementation plan for scope and acceptance gates.
+Подробнее: [Implementation Plan](docs/roadmap/IMPLEMENTATION_PLAN.md)
+
+---
+
+# Документация
+
+### Product
+- [Product Specification](docs/product/PRODUCT_SPEC.md)
+- [Product KPIs](docs/product/KPIS.md)
+- [Vertical Packs](docs/product/VERTICAL_PACKS.md)
+
+### Architecture
+- [System Architecture](docs/architecture/SYSTEM_ARCHITECTURE.md)
+- [Domain Model](docs/architecture/DOMAIN_MODEL.md)
+- [Security & Tenancy](docs/architecture/SECURITY.md)
+- [Integrations](docs/architecture/INTEGRATIONS.md)
+- [Observability](docs/architecture/OBSERVABILITY.md)
+
+### Specifications
+- [Континент / Property Management](docs/specs/CONTINENT_PROPERTY_MANAGEMENT.md)
+- [Owner Control](docs/specs/OWNER_CONTROL.md)
+- [Admin Control Plane](docs/specs/ADMIN_CONTROL_PLANE.md)
+
+### Engineering
+- [Testing Strategy](docs/testing/TEST_STRATEGY.md)
+- [Architecture Decisions](docs/adr/README.md)
+- [Development Runbook](docs/runbooks/DEVELOPMENT.md)
+- [Operations Runbook](docs/runbooks/OPERATIONS.md)
+- [Engineering Rules](AGENTS.md)
+
+---
+
+<div align="center">
+
+## Не заставлять владельца бизнеса контролировать больше.  
+## Дать ему возможность видеть больше, тратя на контроль меньше времени.
+
+**Start — единый операционный слой между людьми, процессами, деньгами и решениями.**
+
+</div>
