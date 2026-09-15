@@ -16,7 +16,7 @@
 
 ## Specifications
 
-- [Континент Property Management](specs/CONTINENT_PROPERTY_MANAGEMENT.md)
+- [Property Management Pack](specs/PROPERTY_MANAGEMENT.md)
 - [Owner Control](specs/OWNER_CONTROL.md)
 - [Admin Control Plane](specs/ADMIN_CONTROL_PLANE.md)
 
