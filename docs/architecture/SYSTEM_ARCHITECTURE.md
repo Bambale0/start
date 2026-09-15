@@ -326,6 +326,70 @@ AI output schemas are validated.
 
 AI never grants authorization or directly bypasses deterministic workflow policy.
 
+## 12A. Two agent contours
+
+Start uses two separate agent modes.
+
+### Interactive Employee Agent
+
+Triggered by an authenticated user instruction.
+
+Primary behavior:
+
+- search/read authorized structured data;
+- search/read authorized knowledge;
+- summarize/explain/compare;
+- prepare drafts;
+- propose actions.
+
+It inherits the user's effective permissions and tenant/group scope.
+
+Its tool surface is deliberately small and mostly read-only.
+
+Writes are routed through a controlled Action Gateway that validates permission, tenant scope, deterministic business rules, idempotency and confirmation policy.
+
+### Routine Automation Agent
+
+Triggered by configured workflow/event templates.
+
+It receives a bounded task envelope:
+
+- tenant scope;
+- triggering entity/event;
+- allowed evidence;
+- expected structured output;
+- agent policy/version;
+- tool/time/cost budget.
+
+It primarily reads context and returns a structured decision/proposal to Workflow Engine. Deterministic application services perform mutations.
+
+Examples:
+
+- classify request;
+- extract address/person/problem;
+- propose routing;
+- detect likely duplicate/Incident;
+- summarize document;
+- draft resident notification;
+- classify legal correspondence.
+
+### Tool design
+
+Prefer a few stable capability classes over a large entity-by-entity tool catalog.
+
+Conceptually:
+
+- business search/read;
+- knowledge search;
+- timeline read;
+- metrics read;
+- draft creation;
+- controlled action proposal.
+
+Adding a new entity should not automatically create a new direct LLM tool.
+
+See ADR 0008.
+
 ## 13. Owner intelligence
 
 Owner Control consumes normalized data from organizations under an authorized group.
