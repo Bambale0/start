@@ -118,6 +118,37 @@ A merge is allowed only when all applicable conditions are true:
 
 A coding agent MUST NOT call a merge action merely because CI is green.
 
+## 5A. GitHub server-side enforcement
+
+Repository process rules are not sufficient by themselves. The default branch MUST be protected by a GitHub branch protection rule or repository ruleset.
+
+Required GitHub enforcement for `main`:
+
+- require a pull request before merging;
+- require at least 1 approving review;
+- require review from Code Owners;
+- dismiss stale approvals when new commits are pushed;
+- require approval of the most recent reviewable push when available;
+- require the repository CI status check to pass before merge;
+- require branches to be up to date before merge;
+- require conversation resolution before merge;
+- block force pushes;
+- block branch deletion;
+- apply the rule to administrators/bypass actors as strictly as the repository plan allows;
+- do not permit direct pushes to `main`.
+
+The repository-local `team.reviewer.v1` review complements GitHub approval. Neither replaces the other.
+
+A merge is valid only when both layers agree:
+
+```text
+GitHub protected-branch/ruleset gates green
++
+team.reviewer.v1 APPROVE for current head SHA
+=
+merge eligible
+```
+
 ## 6. Separation of duties
 
 For Medium and High risk changes, the final Reviewer Skill should be performed independently from implementation whenever possible.
