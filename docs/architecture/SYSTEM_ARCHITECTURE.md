@@ -27,6 +27,7 @@ API / BFF Layer
 │ Work/Tasks      Workflow Engine            │
 │ Documents       Finance Events             │
 │ Communications  Integrations               │
+│ Attention / Notifications                   │
 │ Analytics       Audit                      │
 │ Knowledge/Search Retrieval                  │
 │ Vertical Packs  Owner Intelligence         │
@@ -421,6 +422,38 @@ Examples:
 - analytics materialization.
 
 Queue implementation is an infrastructure choice behind an abstraction and may evolve without changing domain APIs.
+
+## 14A. Realtime attention and notifications
+
+Domain/integration events may produce scoped AttentionEvents.
+
+~~~text
+Domain / Integration Event
+        ↓
+NotificationPolicy
+        ↓
+recipient resolution
+        ↓
+AttentionEvent
+        ↓
+realtime in-app + configured channels
+        ↓
+ACK / durable escalation timer
+~~~
+
+Urgent operational information should reach authorized users without manual page refresh.
+
+The platform must distinguish:
+
+- event occurred;
+- notification queued;
+- provider accepted;
+- delivered when known;
+- read/acknowledged when known.
+
+The engine supports grouping and anti-noise so a mass Incident does not generate uncontrolled notification storms.
+
+See `REALTIME_NOTIFICATIONS.md`.
 
 ## 15. Caching
 
