@@ -105,7 +105,7 @@ A generic Case → WorkOrder journey works without property-specific core code.
 
 A configured workflow can execute end-to-end and survive retry/restart without duplicate side effects.
 
-## Phase 4 — Континент Pilot A: Office Intake
+## Phase 4 — Property Management Pilot A: Office Intake
 
 ### Deliverables
 
@@ -144,7 +144,7 @@ The initiating office workflow can operate without manual retyping across inbox 
 
 Human Intervention Rate and SLA metrics are available and trustworthy.
 
-## Phase 6 — Континент Pilot B: Omnichannel
+## Phase 6 — Property Management Pilot B: Omnichannel
 
 ### Deliverables
 
