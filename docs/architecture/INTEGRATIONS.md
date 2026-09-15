@@ -181,6 +181,16 @@ Start must clearly distinguish:
 
 ## 11. Email
 
+Email is a first-class Communication source, not a periodic import-only feature.
+
+Initial explicit provider adapters:
+
+- Yandex Mail / Yandex 360 Mail;
+- Mail.ru Mail;
+- Generic IMAP/SMTP.
+
+All adapters implement the common EmailProvider contract.
+
 Email becomes a Communication source.
 
 Pipeline:
@@ -196,6 +206,31 @@ Email received
 ```
 
 Raw mail remains retrievable according to provider/storage policy.
+
+### Near-real-time mailbox watch
+
+Preferred strategy per provider:
+
+1. provider webhook/push API where officially supported;
+2. IMAP IDLE / long-lived watch where supported;
+3. adaptive short polling fallback;
+4. periodic reconciliation regardless of primary mode.
+
+The watch mode is adapter/configuration policy.
+
+Mailbox state tracks provider message ID/UID, cursor, last successful watch event, reconciliation time and backlog/freshness.
+
+Duplicate delivery through watch + reconciliation must create only one Communication.
+
+### Yandex Mail
+
+The adapter should prefer provider-supported OAuth/XOAUTH2 where configured and support secure IMAP/SMTP according to current provider documentation.
+
+### Mail.ru Mail
+
+The adapter supports secure IMAP/SMTP and the strongest account authorization mode available for the configured tenant/provider setup.
+
+Provider protocol details are verified at implementation time and remain isolated inside the adapter rather than business logic.
 
 ## 12. Telephony
 
@@ -224,6 +259,24 @@ They should not own:
 - workflow definitions;
 - AI prompts;
 - SLA rules.
+
+## 13A. Priority notifications
+
+Inbound email/messenger events can create AttentionEvents according to configured NotificationPolicy.
+
+Urgent communication must not wait for a periodic dashboard refresh.
+
+The platform supports:
+
+- immediate in-app/realtime dispatch;
+- push/messenger/email fallback;
+- acknowledgement;
+- escalation;
+- grouping/deduplication;
+- quiet-hour rules with configurable urgent override;
+- delivery state.
+
+See `REALTIME_NOTIFICATIONS.md`.
 
 ## 14. Integration observability
 
