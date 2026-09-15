@@ -125,9 +125,10 @@ Repository process rules are not sufficient by themselves. The default branch MU
 Required GitHub enforcement for `main`:
 
 - require a pull request before merging;
-- require at least 1 approving review;
-- require review from Code Owners;
+- require at least 1 independent approving review;
+- require at least one independent approving review;
 - dismiss stale approvals when new commits are pushed;
+- require Code Owner review only after independent code-owner users/teams are configured;
 - require approval of the most recent reviewable push when available;
 - require the repository CI status check to pass before merge;
 - require branches to be up to date before merge;
