@@ -40,7 +40,21 @@ Before any meaningful implementation, refactor, infrastructure, security, integr
 
 ### Absolute merge gate
 
-**DO NOT MERGE without Reviewer Skill evidence for the current head SHA.**
+**DO NOT MERGE without BOTH GitHub protected-branch gates and Reviewer Skill evidence for the current head SHA.**
+
+GitHub must enforce on `main`:
+- pull-request-only changes;
+- at least one approving review;
+- Code Owner review;
+- stale approval dismissal after new commits;
+- required CI status checks;
+- up-to-date branch before merge;
+- conversation resolution;
+- no force push;
+- no branch deletion;
+- no direct push/bypass except an explicitly governed emergency path.
+
+The repository ruleset/branch protection is the server-side authority. Repository instructions do not substitute for it.
 
 A human or agent MUST NOT invoke a merge action unless all applicable conditions are true:
 
