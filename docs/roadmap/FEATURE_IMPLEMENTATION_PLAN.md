@@ -661,6 +661,8 @@ A message in a building chat can become a structured request without an operator
 
 ## F14 — AI Intake, Classification and Routing Suggestions
 
+**Agent contour:** Routine Automation Agent (A03).
+
 ### Outcome
 Routine requests are structured and routed automatically when confidence/policy allow.
 
@@ -1340,6 +1342,8 @@ One global account can safely control authorized businesses without entering eac
 ---
 
 ## F38 — Owner AI / Business Q&A
+
+**Agent contour:** Interactive Employee Agent runtime (A02) with group-authorized Owner policy. No separate privileged super-agent.
 
 ### Outcome
 Owner can ask questions across authorized businesses and receive evidence-backed answers.
