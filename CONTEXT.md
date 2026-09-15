@@ -127,6 +127,15 @@ Initial packs:
 - Construction;
 - Fleet / Service.
 
+## Interactive Employee Agent
+Human-invoked read-first agent operating under the invoking user's exact permissions. It searches structured business data and Knowledge, explains/summarizes/compares, creates drafts, and may only request mutations through the controlled Action Gateway.
+
+## Routine Automation Agent
+Workflow/event-invoked read-first agent with a bounded task envelope, structured output and configured budgets. It proposes classifications/decisions/drafts; deterministic workflow/application services perform state changes.
+
+## Action Gateway
+Single controlled path for agent-initiated writes. It validates tenant scope, permission, business rules, idempotency and confirmation/approval policy before calling normal application services.
+
 ## Owner Control
 High-level UX for founders/owners/group managers focused on money, risk, deviations, assets, projects, contractors and decisions.
 
@@ -379,6 +388,12 @@ F03 Universal Domain Core
 F04 Events / Outbox / Workflow / SLA
 ↓
 F05 Knowledge & Retrieval / pgvector
+↓
+A01 Shared Agent Runtime / Action Gateway
+↓
+A02 Interactive Employee Agent
+↓
+A03 Routine Automation Agent
 ↓
 Property Management vertical slices
 ↓
