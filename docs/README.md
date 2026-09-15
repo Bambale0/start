@@ -23,6 +23,7 @@
 ## Delivery
 
 - [Implementation Plan](roadmap/IMPLEMENTATION_PLAN.md)
+- [Feature-by-Feature Implementation Plan](roadmap/FEATURE_IMPLEMENTATION_PLAN.md)
 - [Test Strategy](testing/TEST_STRATEGY.md)
 - [Development Runbook](runbooks/DEVELOPMENT.md)
 - [Operations Runbook](runbooks/OPERATIONS.md)
