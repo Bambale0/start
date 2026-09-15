@@ -105,6 +105,35 @@ A generic Case → WorkOrder journey works without property-specific core code.
 
 A configured workflow can execute end-to-end and survive retry/restart without duplicate side effects.
 
+## Phase 3A — Knowledge / Hybrid Retrieval Foundation
+
+### Deliverables
+
+- KnowledgeSource / KnowledgeChunk / EmbeddingRecord;
+- pgvector extension and schema;
+- parsing/chunking contracts;
+- embedding provider contract;
+- deterministic fake embeddings for tests;
+- PostgreSQL full-text search;
+- hybrid retrieval;
+- tenant/document permission filtering;
+- source version/checksum reindex lifecycle;
+- indexing health/freshness.
+
+### Exit gate
+
+Authorized semantic and lexical search works over synthetic documents, unauthorized tenant/document evidence cannot be retrieved, and the index can be rebuilt from authoritative sources.
+
+### Verification
+
+- migration/extension;
+- vector/full-text integration;
+- RLS/permission retrieval;
+- source update/delete propagation;
+- E2E authorized search;
+- E2E forbidden cross-tenant search;
+- smoke vector search.
+
 ## Phase 4 — Property Management Pilot A: Office Intake
 
 ### Deliverables
@@ -377,7 +406,7 @@ Each ticket should state:
 
 ## Commercial proof milestone
 
-After stable Континент pilot, create a measured report:
+After stable Property Management pilot, create a measured report:
 
 - baseline vs current;
 - request volume;
