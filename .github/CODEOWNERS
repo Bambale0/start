@@ -1,0 +1,8 @@
+# Default repository code owner.
+# GitHub branch protection/ruleset must enable "Require review from Code Owners".
+* @Bambale0
+
+# Governance and merge-gate files require explicit owner review.
+/AGENTS.md @Bambale0
+/team/ @Bambale0
+/.github/ @Bambale0

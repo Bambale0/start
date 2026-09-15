@@ -24,6 +24,69 @@ Before any meaningful development, debugging, refactor, architecture or deployme
 
 If the skills repository cannot be accessed, state that fact rather than pretending its guidance was applied.
 
+## Mandatory repository-local team skills
+
+The repository-local operating skills in `team/` are mandatory working instructions, not optional role descriptions.
+
+Before any meaningful implementation, refactor, infrastructure, security, integration, AI, UX, data, or product-spec change:
+
+1. Read `team/README.md` and `team/00-WORKING-AGREEMENT.md`.
+2. Select the applicable role skill(s) from `team/*.skill.md`.
+3. Read each selected skill before editing.
+4. Declare the active skill IDs in the PR/change report.
+5. Follow each selected skill's required procedure, evidence, stop conditions, and handoff.
+6. Add specialist review skills required by the matrix in `team/00-WORKING-AGREEMENT.md`.
+7. Apply `team.reviewer.v1` from `team/11-REVIEWER.skill.md` before merge.
+
+### Absolute merge gate
+
+**DO NOT MERGE without BOTH GitHub protected-branch gates and Reviewer Skill evidence for the current head SHA.**
+
+GitHub must enforce on `main`:
+- pull-request-only changes;
+- at least one independent approving review;
+- stale approval dismissal after new commits;
+- Code Owner review when independent code-owner users/teams are configured;
+- required CI status checks;
+- up-to-date branch before merge;
+- conversation resolution;
+- no force push;
+- no branch deletion;
+- no direct push/bypass except an explicitly governed emergency path.
+
+The repository ruleset/branch protection is the server-side authority. Repository instructions do not substitute for it.
+
+A human or agent MUST NOT invoke a merge action unless all applicable conditions are true:
+
+- `team.reviewer.v1` has produced an `APPROVE` verdict for the current head SHA;
+- Critical findings = 0;
+- High findings = 0;
+- mandatory specialist reviews are complete;
+- applicable verification/tests pass;
+- CI is green for the exact head SHA;
+- unresolved Medium findings are fixed or explicitly accepted by the project owner with rationale.
+
+If the head SHA changes after review, re-run Reviewer Skill or explicitly review the delta and bind approval to the new SHA.
+
+For Medium/High risk work, final review should be independent of the primary implementation. For High risk production changes, self-review does not count as final production approval.
+
+### Skill selection guide
+
+- cross-module architecture/platform primitives → `team.tech-lead.v1`;
+- API/domain/repository/worker implementation → `team.backend.v1`;
+- auth/tenancy/RLS/secrets/webhooks/security → `team.security.v1`;
+- CI/CD/runtime/deploy/observability/recovery → `team.platform-sre.v1`;
+- frontend behavior → `team.frontend.v1`;
+- test/release evidence → `team.qa.v1`;
+- business semantics/acceptance criteria → `team.product-domain.v1`;
+- LLM/RAG/tools/evals → `team.ai-llm.v1`;
+- external providers → `team.integration.v1`;
+- material user workflow/UX → `team.ux.v1`;
+- schema/migrations/RLS/performance/backup → `team.dba.v1`;
+- every merge → `team.reviewer.v1`.
+
+These repository-local skills complement `Bambale0/skills`; they do not replace the broader engineering playbook.
+
 ## Repository discovery before editing
 
 Inspect the evidence relevant to the task before changing code:
