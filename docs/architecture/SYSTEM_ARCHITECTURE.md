@@ -28,10 +28,11 @@ API / BFF Layer
 │ Documents       Finance Events             │
 │ Communications  Integrations               │
 │ Analytics       Audit                      │
+│ Knowledge/Search Retrieval                  │
 │ Vertical Packs  Owner Intelligence         │
 └────────────────────────────────────────────┘
         │
-        ├── PostgreSQL
+        ├── PostgreSQL + pgvector
         ├── Redis/cache/coordination
         ├── Queue / background workers
         └── Object storage
@@ -104,6 +105,7 @@ src/start/
     finance/
     communications/
     analytics/
+    knowledge/
 
   integrations/
     accounting/
@@ -124,6 +126,8 @@ src/start/
     routing/
     anomaly_detection/
     owner_assistant/
+    retrieval/
+    embeddings/
 ```
 
 The initial scaffold may be smaller; this is the target dependency map.
@@ -385,6 +389,46 @@ Binary artifacts live in object storage.
 PostgreSQL stores metadata, access rules, checksums, provider references and relationships.
 
 Sensitive documents use signed/short-lived access.
+
+## 17A. Knowledge and retrieval architecture
+
+Unstructured information is indexed through a derived Knowledge/Retrieval layer.
+
+~~~text
+Document / Communication / Domain Entity
+        ↓
+authoritative metadata + access policy
+        ↓
+parse / normalize
+        ↓
+versioned chunks
+        ↓
+embeddings
+        ↓
+PostgreSQL full-text + pgvector
+        ↓
+authorized hybrid retrieval
+        ↓
+optional rerank
+        ↓
+evidence-backed AI / user search
+~~~
+
+Rules:
+
+- original files remain in object storage or their external system of record;
+- document metadata/permissions remain authoritative in PostgreSQL;
+- vector/text indexes are derivative and rebuildable;
+- every tenant-bound chunk carries organization_id directly;
+- access filtering happens before evidence enters AI context;
+- embedding model, chunking and ranking policies are configuration/versioned data;
+- source checksum/version controls freshness and reindex;
+- deletion/revocation must make indexed evidence inaccessible immediately/fail closed;
+- the retrieval implementation sits behind a provider-agnostic port.
+
+Initial vector implementation is pgvector in the existing PostgreSQL topology. A dedicated vector service may replace the storage adapter later if measured scale/reliability/latency justifies it.
+
+See ADR 0007.
 
 ## 18. Frontend architecture
 
