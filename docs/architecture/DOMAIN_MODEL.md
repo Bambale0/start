@@ -323,6 +323,70 @@ Links:
 - payment terms;
 - related work/assets/objects.
 
+## 9A. Knowledge and retrieval model
+
+### KnowledgeSource
+
+Reference to an authoritative source that is eligible for indexing.
+
+Typical sources:
+
+- Document;
+- Communication;
+- Case/Incident narrative;
+- Asset manual;
+- Legal Case material;
+- external document mirrored through an IntegrationConnection.
+
+### KnowledgeChunk
+
+Derived text segment.
+
+Conceptual fields:
+
+- organization_id;
+- optional group_id;
+- source_type / source_id;
+- source checksum/version;
+- chunk ordinal;
+- normalized text;
+- structured metadata;
+- permission scope;
+- parser version;
+- chunker policy/version;
+- lifecycle state.
+
+A KnowledgeChunk is rebuildable and is never the authoritative business record.
+
+### EmbeddingRecord
+
+Derived vector representation.
+
+Conceptual fields:
+
+- chunk_id;
+- embedding profile/version;
+- provider/model identifier;
+- dimension;
+- vector;
+- created_at;
+- stale/rebuild state.
+
+No domain rule depends on one hardcoded embedding provider/model.
+
+### RetrievalPolicy
+
+Versioned configuration for:
+
+- lexical/vector retrieval;
+- candidate counts;
+- ranking/fusion;
+- optional reranking;
+- source-type filters;
+- freshness constraints.
+
+Authorization filters are not optional retrieval policy: they are mandatory security constraints.
+
 ## 10. Finance model
 
 ### FinancialEvent
