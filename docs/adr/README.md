@@ -19,3 +19,4 @@ Create a new ADR when changing an accepted decision. Do not silently rewrite his
 - [0004 — Vertical packs over separate CRM codebases](0004-vertical-packs.md)
 - [0005 — Global identity with scoped memberships](0005-global-identity-scoped-membership.md)
 - [0006 — Domain events and transactional outbox](0006-domain-events-outbox.md)
+- [0007 — Derived knowledge index with pgvector first](0007-knowledge-retrieval-pgvector.md)
