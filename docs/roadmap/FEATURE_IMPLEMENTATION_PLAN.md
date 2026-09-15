@@ -338,6 +338,137 @@ Photos, PDFs, scans and office documents become first-class linked business arti
 
 ---
 
+# AGENTIC LAYER
+
+## A01 — Shared Agent Runtime and Action Gateway
+
+### Outcome
+Provide one secure runtime for both human-invoked and routine agents without exposing unrestricted CRUD tools.
+
+### Implementation
+1. AgentDefinition / version;
+2. AgentRun;
+3. AgentPolicy / ToolPolicy;
+4. prompt/template versioning;
+5. model provider port;
+6. deterministic fake model adapter;
+7. capability registry;
+8. read capability gateway;
+9. structured output validation;
+10. ActionProposal;
+11. Action Gateway;
+12. confirmation/approval policy;
+13. idempotency;
+14. audit/telemetry;
+15. admin configuration.
+
+### No-hardcode
+- model/provider;
+- prompts;
+- allowed capabilities;
+- budgets;
+- confidence thresholds;
+- action policies;
+- fallback behavior;
+- organization enablement.
+
+### Tests
+- policy resolution;
+- tool allowlist;
+- unauthorized tool rejected;
+- scope widening rejected;
+- output schema validation;
+- Action Gateway permission;
+- Action Gateway idempotency;
+- prompt injection fixture;
+- deterministic fake provider;
+- E2E read-only agent run;
+- E2E proposed action requiring confirmation;
+- smoke fake-agent runtime.
+
+---
+
+## A02 — Interactive Employee Agent
+
+### Outcome
+An employee can ask the system to find, explain, summarize, compare and draft using only data the employee is allowed to access.
+
+### Default capabilities
+- business search/read;
+- knowledge search;
+- timeline read;
+- metrics read;
+- draft creation;
+- controlled action proposal.
+
+### Implementation
+1. conversational/session entrypoint;
+2. selected organization/group context;
+3. authorized context builder;
+4. small read-first capability surface;
+5. evidence references;
+6. draft output;
+7. ActionProposal flow;
+8. explicit confirmation UI;
+9. session retention policy;
+10. usage/cost telemetry.
+
+### Tests
+- user permission inheritance;
+- tenant isolation;
+- object/business-unit scope;
+- legal/financial restrictions;
+- unauthorized evidence absent;
+- evidence-backed answer;
+- no hidden write;
+- prompt injection;
+- E2E employee question → evidence answer;
+- E2E employee proposes allowed action → confirms → mutation;
+- E2E denied action;
+- smoke with fake model.
+
+---
+
+## A03 — Routine Automation Agent
+
+### Outcome
+Configured workflow/event templates can use AI reasoning for repetitive interpretation work without turning the agent into an autonomous CRUD backend.
+
+### Implementation
+1. routine AgentDefinition;
+2. event/workflow trigger binding;
+3. bounded TaskEnvelope;
+4. allowed evidence/source scope;
+5. tool-call/time/token/cost budget;
+6. structured result schema;
+7. confidence policy;
+8. fallback/human-review policy;
+9. Workflow Engine result adapter;
+10. run audit/telemetry.
+
+### Typical uses
+- intake classification;
+- field extraction;
+- duplicate/Incident suggestion;
+- routing recommendation;
+- document classification;
+- resident-notification draft;
+- management narrative.
+
+### Tests
+- exact task-envelope scope;
+- no generic tenant-wide access unless configured;
+- structured result validation;
+- low-confidence human review;
+- provider timeout/fallback;
+- duplicate event/idempotency;
+- prompt injection content;
+- E2E event → agent proposal → deterministic workflow action;
+- E2E low-confidence → no mutation + review;
+- smoke with fake model.
+
+---
+
 # PROPERTY MANAGEMENT — MASTER DATA
 
 ## F07 — Buildings, Premises and Service Areas
