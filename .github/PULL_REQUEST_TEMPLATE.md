@@ -33,3 +33,21 @@ List exact checks run and results.
 ## Rollout / Risk
 
 Describe migration, rollback/forward-fix and remaining risks.
+
+## Team skills / merge gate
+
+- Active skills:
+  - `team.<skill>.v1`
+- Risk class: low / medium / high
+- Mandatory specialist reviews:
+  - [ ] Identified from `team/00-WORKING-AGREEMENT.md`
+  - [ ] Completed or N/A with rationale
+- Reviewer Skill:
+  - [ ] `team.reviewer.v1` applied to the current head SHA
+  - Verdict: APPROVE / REQUEST_CHANGES
+  - Critical findings: 0 / N
+  - High findings: 0 / N
+- Exact head SHA reviewed:
+
+> Do not merge if Reviewer Skill evidence is missing, stale for the current head SHA, or has unresolved Critical/High findings.
+
