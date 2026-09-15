@@ -44,9 +44,9 @@ Before any meaningful implementation, refactor, infrastructure, security, integr
 
 GitHub must enforce on `main`:
 - pull-request-only changes;
-- at least one approving review;
-- Code Owner review;
+- at least one independent approving review;
 - stale approval dismissal after new commits;
+- Code Owner review when independent code-owner users/teams are configured;
 - required CI status checks;
 - up-to-date branch before merge;
 - conversation resolution;
